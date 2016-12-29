@@ -1,5 +1,8 @@
-#!/bin/bash
+#!/bin/env python
 
-if __name__ == __main__:
-    input_expression = input("> ")
-    print(input_expression)
+from calc import eval_
+
+if __name__ == "__main__":
+    while True:
+        input_expression = input("> ")
+        print(eval_(input_expression))
