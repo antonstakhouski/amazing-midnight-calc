@@ -6,6 +6,7 @@ from math import sqrt, sin, cos, log10, e, pi
 
 BINARY_OPERATORS = {'+': (1, lambda x, y: x + y, 'l'), '-': (1, lambda x, y: x - y, 'l'),
                     '*': (2, lambda x, y: x * y, 'l'), '/': (2, lambda x, y: x / y, 'l'),
+                    '//': (2, lambda x, y: x // y, 'l'),
                     '^': (4, lambda x, y: x ** y, 'r')}
 FUNCTIONS = {'sqr': (9, lambda x: x * x),
              'sqrt': (9, lambda x: sqrt(x)),

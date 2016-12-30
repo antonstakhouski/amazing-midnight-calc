@@ -58,7 +58,7 @@ simpleTestSuite.addTest(CalcTestSequence('test_log10'))
 simpleTestSuite.addTest(CalcTestSequence('test_exponentiation'))
 simpleTestSuite.addTest(CalcTestSequence('test_mul'))
 simpleTestSuite.addTest(CalcTestSequence('test_constants'))
-#simpleTestSuite.addTest(CalcTestSequence('test_integer_division'))
+simpleTestSuite.addTest(CalcTestSequence('test_integer_division'))
 
 if __name__ == '__main__':
     unittest.main()

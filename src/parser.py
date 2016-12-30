@@ -7,11 +7,13 @@ class Parser:
         self.number = ''
         self.func_or_const = ''
         self.last_token = ''
+        self.operator = ''
 
     def parse(self, formula_string):
         self.number = ''
         self.func_or_const = ''
         self.last_token = ''
+        self.operator = ''
         for s in formula_string:
             yield from self.func_or_const_action(s)
             yield from self.number_action(s)
@@ -23,8 +25,14 @@ class Parser:
 
     def operator_action(self, s):
         if s in BINARY_OPERATORS or s == ")":
-            self.last_token = 's'
-            yield s
+            self.last_token = 'operator'
+            if s == '/':
+                self.operator += s
+            else:
+                yield s
+        elif self.operator:
+            yield self.operator
+            self.operator = ''
         if s == "(":
             if self.last_token == 'number':
                 yield '*'
