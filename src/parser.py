@@ -1,4 +1,4 @@
-from src.constants import BINARY_OPERATORS, CONSTANTS
+from src.constants import OPERATORS, CONSTANTS
 import string
 
 
@@ -24,17 +24,24 @@ class Parser:
             yield CONSTANTS[self.func_or_const]
 
     def operator_action(self, s):
-        if s in BINARY_OPERATORS or s == ")":
-            self.last_token = 'operator'
+        if s in OPERATORS or s == ")":
             if s == '/':
                 self.operator += s
+            elif s == '-' and self.last_token != 'number' and self.last_token != ')':
+                yield '±'
             else:
+                if s == ')':
+                    self.last_token = ')'
+                else:
+                    self.last_token = 'operator'
                 yield s
         elif self.operator:
+            self.last_token = 'operator'
             yield self.operator
             self.operator = ''
         if s == "(":
             if self.last_token == 'number':
+                self.last_token = 'operator'
                 yield '*'
             yield s
 
@@ -53,9 +60,10 @@ class Parser:
             if self.func_or_const[0] in string.ascii_lowercase and s in string.digits:
                 self.func_or_const += s
             else:
-                self.last_token = 'func_or_const'
                 if self.func_or_const in CONSTANTS:
+                    self.last_token = 'number'
                     yield CONSTANTS[self.func_or_const]
                 else:
+                    self.last_token = 'function'
                     yield self.func_or_const
                 self.func_or_const = ''

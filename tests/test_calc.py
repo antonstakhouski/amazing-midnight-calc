@@ -49,6 +49,10 @@ class CalcTestSequence(unittest.TestCase):
         formula = "e*pi"
         self.assertEqual(e * pi, self.calculator.eval_(formula))
 
+    def test_unary_minus(self):
+        formula = "-5"
+        self.assertEqual(eval(formula), self.calculator.eval_(formula))
+
 simpleTestSuite = unittest.TestSuite()
 simpleTestSuite.addTest(CalcTestSequence('test_sumMulDivSub'))
 simpleTestSuite.addTest(CalcTestSequence('test_sqr'))
@@ -59,6 +63,8 @@ simpleTestSuite.addTest(CalcTestSequence('test_exponentiation'))
 simpleTestSuite.addTest(CalcTestSequence('test_mul'))
 simpleTestSuite.addTest(CalcTestSequence('test_constants'))
 simpleTestSuite.addTest(CalcTestSequence('test_integer_division'))
+simpleTestSuite.addTest(CalcTestSequence('test_unary_minus'))
+#simpleTestSuite.addTest(CalcTestSequence('test_epam_advanced'))
 
 if __name__ == '__main__':
     unittest.main()

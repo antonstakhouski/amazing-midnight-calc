@@ -1,4 +1,4 @@
-from src.constants import BINARY_OPERATORS, FUNCTIONS
+from src.constants import OPERATORS, FUNCTIONS
 
 
 class Evaluator:
@@ -13,9 +13,13 @@ class Evaluator:
             if token in FUNCTIONS:
                 x = self.stack.pop()
                 self.stack.append(FUNCTIONS[token][1](x))
-            elif token in BINARY_OPERATORS:
-                y, x = self.stack.pop(), self.stack.pop()
-                self.stack.append(BINARY_OPERATORS[token][1](x, y))
+            elif token in OPERATORS:
+                if OPERATORS[token][3] == 'b':
+                    y, x = self.stack.pop(), self.stack.pop()
+                    self.stack.append(OPERATORS[token][1](x, y))
+                else:
+                    x = self.stack.pop()
+                    self.stack.append(OPERATORS[token][1](x))
             else:
                 self.stack.append(token)
         return self.stack[0]

@@ -1,4 +1,4 @@
-from src.constants import BINARY_OPERATORS, FUNCTIONS
+from src.constants import OPERATORS, FUNCTIONS
 
 
 class ShuntingYard:
@@ -11,8 +11,8 @@ class ShuntingYard:
             # print(token)
             if token in FUNCTIONS:
                 yield from self.function_action(token)
-            elif token in BINARY_OPERATORS:
-                yield from self.binary_operators_action(token)
+            elif token in OPERATORS:
+                yield from self.operators_action(token)
             elif token == ")":
                 yield from self.close_brace_action()
             elif token == "(":
@@ -23,9 +23,9 @@ class ShuntingYard:
         while self.stack:
             yield self.stack.pop()
 
-    def binary_operators_action(self, token):
+    def operators_action(self, token):
         while self.stack and self.stack[-1] != "(" and self.stack[-1] not in FUNCTIONS and \
-                        BINARY_OPERATORS[token][0] <= BINARY_OPERATORS[self.stack[-1]][0]:
+                        OPERATORS[token][0] <= OPERATORS[self.stack[-1]][0]:
             yield self.stack.pop()
         self.stack.append(token)
 
