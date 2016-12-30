@@ -9,4 +9,3 @@ FUNCTIONS = {'sqr': (9, lambda x: x * x),
              'cos': (9, lambda x: cos(x)),
              'abs': (9, lambda x: abs(x)),
              'log10': (9, lambda x: log10(x))}
-alphabet = string.ascii_lowercase

@@ -11,4 +11,3 @@ class Calculator:
 
     def eval_(self, formula):
         return self.evaluator.calc(self.shunting_yard.shunting_yard(self.parser.parse(formula)))
-    # return calc(shunting_yard(parse(formula)))

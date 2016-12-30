@@ -37,7 +37,7 @@ simpleTestSuite.addTest(CalcTestSequence('test_sumMulDivSub'))
 simpleTestSuite.addTest(CalcTestSequence('test_sqr'))
 simpleTestSuite.addTest(CalcTestSequence('test_epam_easy'))
 simpleTestSuite.addTest(CalcTestSequence('test_abs'))
-# simpleTestSuite.addTest(CalcTestSequence('test_log10'))
+simpleTestSuite.addTest(CalcTestSequence('test_log10'))
 
 if __name__ == '__main__':
     unittest.main()
