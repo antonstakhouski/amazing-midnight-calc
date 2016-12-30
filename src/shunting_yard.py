@@ -32,8 +32,12 @@ class ShuntingYard:
     def function_action(self, token):
         # print(token)
         # print(stack)
-        while self.stack and self.stack[-1] != "(" and FUNCTIONS[token][0] <= FUNCTIONS[self.stack[-1]][0]:
-            yield self.stack.pop()
+        if token[2] == 'l':
+            while self.stack and self.stack[-1] != "(" and FUNCTIONS[token][0] <= FUNCTIONS[self.stack[-1]][0]:
+                yield self.stack.pop()
+        else:
+            while self.stack and self.stack[-1] != "(" and FUNCTIONS[token][0] < FUNCTIONS[self.stack[-1]][0]:
+                yield self.stack.pop()
         self.stack.append(token)
         # print(stack)
 

@@ -28,6 +28,14 @@ class CalcTestSequence(unittest.TestCase):
         formula = "log10(100)"
         self.assertEqual(2.0, self.calculator.eval_(formula))
 
+    def test_integer_division(self):
+        formula = "53//10"
+        self.assertEqual(eval(formula), self.calculator.eval_(formula))
+
+    def test_exponentiation(self):
+        formula = "2^(2)^2"
+        self.assertEqual(eval("2**2**2"), self.calculator.eval_(formula))
+
     def test_epam_advanced(self):
         formula = "10*e^0*log10(.4* -5/-0.1-10) - -abs(-53//10) + -5"
         self.assertEqual(11.0, self.calculator.eval_(formula))
@@ -38,6 +46,8 @@ simpleTestSuite.addTest(CalcTestSequence('test_sqr'))
 simpleTestSuite.addTest(CalcTestSequence('test_epam_easy'))
 simpleTestSuite.addTest(CalcTestSequence('test_abs'))
 simpleTestSuite.addTest(CalcTestSequence('test_log10'))
+simpleTestSuite.addTest(CalcTestSequence('test_exponentiation'))
+#simpleTestSuite.addTest(CalcTestSequence('test_integer_division'))
 
 if __name__ == '__main__':
     unittest.main()
