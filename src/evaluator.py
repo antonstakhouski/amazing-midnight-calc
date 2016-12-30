@@ -8,7 +8,7 @@ class Evaluator:
     def calc(self, polish):
         self.stack = []
         for token in polish:
-            #print(stack)
+            #print(self.stack)
             #print(token)
             if token in FUNCTIONS:
                 x = self.stack.pop()

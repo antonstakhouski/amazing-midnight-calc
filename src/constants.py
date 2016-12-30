@@ -1,4 +1,4 @@
-from math import sqrt, sin, cos, log10
+from math import sqrt, sin, cos, log10, e, pi
 
 """ r - right associative (right to left)
     l - left associative (left to right)
@@ -13,3 +13,4 @@ FUNCTIONS = {'sqr': (9, lambda x: x * x),
              'cos': (9, lambda x: cos(x)),
              'abs': (9, lambda x: abs(x)),
              'log10': (9, lambda x: log10(x))}
+CONSTANTS = {'e': e, 'pi': pi}
