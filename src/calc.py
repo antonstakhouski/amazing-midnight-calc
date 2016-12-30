@@ -16,20 +16,28 @@ def eval_(formula):
     def parse(formula_string):
         number = ''
         function = ''
+        last_token = ''
         for s in formula_string:
             if s in '1234567890.':
                 number += s
             elif number:
+                last_token = 'number'
                 yield float(number)
                 number = ''
 
             if s in alphabet:
                 function += s
             elif function:
+                last_token = 'function'
                 yield function
                 function = ''
 
-            if s in BINARY_OPERATORS or s in "()":
+            if s in BINARY_OPERATORS or s == ")":
+                last_token = 's'
+                yield s
+            if s == "(":
+                if last_token == 'number':
+                    yield '*'
                 yield s
         if number:
             yield float(number)
@@ -39,34 +47,45 @@ def eval_(formula):
         for token in parsed_formula:
             # print(token)
             if token in FUNCTIONS:
-                #print(token)
-                #print(stack)
-                while stack and stack[-1] != "(" and FUNCTIONS[token][0] <= FUNCTIONS[stack[-1]][0]:
-                    yield stack.pop()
-                stack.append(token)
-                #print(stack)
+                yield from functinon_action(stack, token)
             elif token in BINARY_OPERATORS:
-                while stack and stack[-1] != "(" and stack[-1] not in FUNCTIONS and BINARY_OPERATORS[token][0] <= BINARY_OPERATORS[stack[-1]][0]:
-                    yield stack.pop()
-                stack.append(token)
+                yield from binary_operators_action(stack, token)
             elif token == ")":
-                while stack:
-                    #print(stack)
-                    x = stack.pop()
-                    if x == "(":
-                        if stack:
-                            x = stack[-1]
-                            if x in FUNCTIONS:
-                                x = stack.pop()
-                                yield x
-                        break
-                    yield x
+                yield from close_brace_action(stack)
             elif token == "(":
                 stack.append(token)
+                # print(stack)
             else:
                 yield token
         while stack:
             yield stack.pop()
+
+    def binary_operators_action(stack, token):
+        while stack and stack[-1] != "(" and stack[-1] not in FUNCTIONS and \
+                        BINARY_OPERATORS[token][0] <= BINARY_OPERATORS[stack[-1]][0]:
+            yield stack.pop()
+        stack.append(token)
+
+    def functinon_action(stack, token):
+        # print(token)
+        # print(stack)
+        while stack and stack[-1] != "(" and FUNCTIONS[token][0] <= FUNCTIONS[stack[-1]][0]:
+            yield stack.pop()
+        stack.append(token)
+        # print(stack)
+
+    def close_brace_action(stack):
+        while stack:
+            # print(stack)
+            x = stack.pop()
+            if x == "(":
+                if stack:
+                    x = stack[-1]
+                    if x in FUNCTIONS:
+                        x = stack.pop()
+                        yield x
+                break
+            yield x
 
     def calc(polish):
         stack = []
