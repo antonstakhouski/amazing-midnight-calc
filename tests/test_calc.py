@@ -1,6 +1,6 @@
 #!/bin/env python
 import unittest
-from math import e, pi
+from math import e, pi, log10
 
 from src.calc import Calculator
 
@@ -38,12 +38,14 @@ class CalcTestSequence(unittest.TestCase):
         self.assertEqual(eval(formula), self.calculator.eval_(formula))
 
     def test_exponentiation(self):
-        formula = "2^(2)^2"
-        self.assertEqual(eval("2**2**2"), self.calculator.eval_(formula))
+        formula = "10*e^0"
+        self.assertEqual(10*e**0, self.calculator.eval_(formula))
 
     def test_epam_advanced(self):
-        formula = "10*e^0*log10(.4* -5/-0.1-10) - -abs(-53//10) + -5"
-        self.assertEqual(11.0, self.calculator.eval_(formula))
+        #formula = "10*e^0*log10(.4* -5/-0.1-10) - -abs(-53//10) + -5"
+        formula = "10*e^0*log10(.4* -5/-0.1-10)"
+        #formula = ".4* -5/-0.1"
+        self.assertEqual(10*e**0*log10(.4 * -5/-0.1-10), self.calculator.eval_(formula))
 
     def test_constants(self):
         formula = "e*pi"
@@ -64,7 +66,7 @@ simpleTestSuite.addTest(CalcTestSequence('test_mul'))
 simpleTestSuite.addTest(CalcTestSequence('test_constants'))
 simpleTestSuite.addTest(CalcTestSequence('test_integer_division'))
 simpleTestSuite.addTest(CalcTestSequence('test_unary_minus'))
-#simpleTestSuite.addTest(CalcTestSequence('test_epam_advanced'))
+simpleTestSuite.addTest(CalcTestSequence('test_epam_advanced'))
 
 if __name__ == '__main__':
     unittest.main()

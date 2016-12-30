@@ -25,24 +25,37 @@ class Parser:
 
     def operator_action(self, s):
         if s in OPERATORS or s == ")":
-            if s == '/':
-                self.operator += s
-            elif s == '-' and self.last_token != 'number' and self.last_token != ')':
+            print('     ' + s)
+            if s == '-' and self.last_token != 'number' and self.last_token != ')':
+                print('     ' + '±')
+                print("yield " + '±')
                 yield '±'
+            elif self.operator and s != '/':
+                print("clean")
+                print("yield " + self.operator)
+                yield self.operator
+                self.operator = ''
+            elif s == '/':
+                self.last_token = 'operator'
+                self.operator += s
             else:
                 if s == ')':
                     self.last_token = ')'
                 else:
                     self.last_token = 'operator'
+                print("yield " + 's')
                 yield s
         elif self.operator:
             self.last_token = 'operator'
+            print("yield " + self.operator)
             yield self.operator
             self.operator = ''
         if s == "(":
             if self.last_token == 'number':
                 self.last_token = 'operator'
+                print("yield " + '*')
                 yield '*'
+            print("yield " + 's')
             yield s
 
     def number_action(self, s):

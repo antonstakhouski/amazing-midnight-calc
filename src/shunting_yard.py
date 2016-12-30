@@ -9,9 +9,9 @@ class ShuntingYard:
         self.stack = []
         for token in parsed_formula:
             # print(token)
-            if token in FUNCTIONS:
-                yield from self.function_action(token)
-            elif token in OPERATORS:
+            #if token in FUNCTIONS:
+            #    yield from self.function_action(token)
+            if token in OPERATORS:
                 yield from self.operators_action(token)
             elif token == ")":
                 yield from self.close_brace_action()
@@ -24,20 +24,21 @@ class ShuntingYard:
             yield self.stack.pop()
 
     def operators_action(self, token):
-        while self.stack and self.stack[-1] != "(" and self.stack[-1] not in FUNCTIONS and \
-                        OPERATORS[token][0] <= OPERATORS[self.stack[-1]][0]:
-            yield self.stack.pop()
+        if OPERATORS[token][2] == 'l':
+            while self.stack and self.stack[-1] != "(" and self.stack[-1] not in FUNCTIONS and \
+                            OPERATORS[token][0] <= OPERATORS[self.stack[-1]][0]:
+                yield self.stack.pop()
+        else:
+            while self.stack and self.stack[-1] != "(" and self.stack[-1] not in FUNCTIONS and \
+                            OPERATORS[token][0] < OPERATORS[self.stack[-1]][0]:
+                yield self.stack.pop()
         self.stack.append(token)
 
     def function_action(self, token):
         # print(token)
         # print(stack)
-        if token[2] == 'l':
-            while self.stack and self.stack[-1] != "(" and FUNCTIONS[token][0] <= FUNCTIONS[self.stack[-1]][0]:
-                yield self.stack.pop()
-        else:
-            while self.stack and self.stack[-1] != "(" and FUNCTIONS[token][0] < FUNCTIONS[self.stack[-1]][0]:
-                yield self.stack.pop()
+        while self.stack and self.stack[-1] != "(" and FUNCTIONS[token][0] <= FUNCTIONS[self.stack[-1]][0]:
+            yield self.stack.pop()
         self.stack.append(token)
         # print(stack)
 
