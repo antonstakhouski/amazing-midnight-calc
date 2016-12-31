@@ -1,13 +1,18 @@
 #!/bin/env python
 import unittest
 from math import e, pi, log10
+import pytest
 
-from src.calc import Calculator
+from src.calc import Calculator, Evaluator, Parser, ShuntingYard
+from src.exceptions import NotEnoughArgumentsException, StackCorruptionException
 
 
 class CalcTestSequence(unittest.TestCase):
     def setUp(self):
         self.calculator = Calculator()
+        self.parser = Parser()
+        self.shunting_yard = ShuntingYard()
+        self.evaluator = Evaluator()
 
     def test_mul(self):
         formula = "2*2"
@@ -53,18 +58,28 @@ class CalcTestSequence(unittest.TestCase):
         formula = "-5"
         self.assertEqual(eval(formula), self.calculator.eval_(formula))
 
+    def test_not_existing_operation(self):
+        formula = "5 # 4"
+        with pytest.raises(StackCorruptionException):
+            self.evaluator.calc(self.shunting_yard.shunting_yard(self.parser.parse(formula)))
+
+    def test_NotEnoughArgumentsException_binary(self):
+        formula = "5 * "
+        with pytest.raises(NotEnoughArgumentsException):
+            self.evaluator.calc(self.shunting_yard.shunting_yard(self.parser.parse(formula)))
+
+    def test_NotEnoughArgumentsException_unary(self):
+        formula = "-"
+        with pytest.raises(NotEnoughArgumentsException):
+            self.evaluator.calc(self.shunting_yard.shunting_yard(self.parser.parse(formula)))
+
+    def test_NotEnoughArgumentsException_function(self):
+        formula = "sqr()"
+        with pytest.raises(NotEnoughArgumentsException):
+            self.evaluator.calc(self.shunting_yard.shunting_yard(self.parser.parse(formula)))
+
 simpleTestSuite = unittest.TestSuite()
-simpleTestSuite.addTest(CalcTestSequence('test_sumMulDivSub'))
-simpleTestSuite.addTest(CalcTestSequence('test_sqr'))
-simpleTestSuite.addTest(CalcTestSequence('test_epam_easy'))
-simpleTestSuite.addTest(CalcTestSequence('test_abs'))
-simpleTestSuite.addTest(CalcTestSequence('test_log10'))
-simpleTestSuite.addTest(CalcTestSequence('test_exponentiation'))
-simpleTestSuite.addTest(CalcTestSequence('test_mul'))
-simpleTestSuite.addTest(CalcTestSequence('test_constants'))
-simpleTestSuite.addTest(CalcTestSequence('test_integer_division'))
-simpleTestSuite.addTest(CalcTestSequence('test_unary_minus'))
-simpleTestSuite.addTest(CalcTestSequence('test_epam_advanced'))
+
 
 if __name__ == '__main__':
     unittest.main()
