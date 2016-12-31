@@ -25,37 +25,31 @@ class Parser:
 
     def operator_action(self, s):
         if s in OPERATORS or s == ")":
-            print('     ' + s)
-            if s == '-' and self.last_token != 'number' and self.last_token != ')':
-                print('     ' + '±')
-                print("yield " + '±')
-                yield '±'
-            elif self.operator and s != '/':
-                print("clean")
-                print("yield " + self.operator)
-                yield self.operator
-                self.operator = ''
-            elif s == '/':
-                self.last_token = 'operator'
-                self.operator += s
-            else:
-                if s == ')':
-                    self.last_token = ')'
-                else:
-                    self.last_token = 'operator'
-                print("yield " + 's')
-                yield s
+            yield from self.operator_closing_brace(s)
         elif self.operator:
             self.last_token = 'operator'
-            print("yield " + self.operator)
             yield self.operator
             self.operator = ''
         if s == "(":
             if self.last_token == 'number':
                 self.last_token = 'operator'
-                print("yield " + '*')
                 yield '*'
-            print("yield " + 's')
+            yield s
+
+    def operator_closing_brace(self, s):
+        if s == '-' and self.last_token != 'number' and self.last_token != ')':
+            yield '±'
+        elif self.operator and s != '/':
+            yield self.operator
+            self.operator = ''
+        elif s == '/':
+            self.last_token = 'operator'
+            self.operator += s
+        else:
+            if s == ')':
+                self.last_token = ')'
+            else:
+                self.last_token = 'operator'
             yield s
 
     def number_action(self, s):
@@ -68,15 +62,20 @@ class Parser:
 
     def func_or_const_action(self, s):
         if s in string.ascii_lowercase:
+            # create and grow a string
             self.func_or_const += s
         elif self.func_or_const:
             if self.func_or_const[0] in string.ascii_lowercase and s in string.digits:
+                # add digits to string
                 self.func_or_const += s
             else:
-                if self.func_or_const in CONSTANTS:
-                    self.last_token = 'number'
-                    yield CONSTANTS[self.func_or_const]
-                else:
-                    self.last_token = 'function'
-                    yield self.func_or_const
-                self.func_or_const = ''
+                yield from self.yield_func_const()
+
+    def yield_func_const(self):
+        if self.func_or_const in CONSTANTS:
+            self.last_token = 'number'
+            yield CONSTANTS[self.func_or_const]
+        else:
+            self.last_token = 'function'
+            yield self.func_or_const
+        self.func_or_const = ''

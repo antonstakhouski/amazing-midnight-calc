@@ -1,4 +1,4 @@
-from src.constants import OPERATORS, FUNCTIONS
+from src.constants import OPERATORS
 
 
 class Evaluator:
@@ -8,21 +8,22 @@ class Evaluator:
     def calc(self, polish):
         self.stack = []
         for token in polish:
-            print(self.stack)
-            print(token)
-            #if token in FUNCTIONS:
-            #    x = self.stack.pop()
-            #    self.stack.append(FUNCTIONS[token][1](x))
+            #print(self.stack)
+            #print(token)
             if token in OPERATORS:
-                if OPERATORS[token][3] == 'f':
-                    x = self.stack.pop()
-                    self.stack.append(FUNCTIONS[token][1](x))
-                elif OPERATORS[token][3] == 'b':
-                    y, x = self.stack.pop(), self.stack.pop()
-                    self.stack.append(OPERATORS[token][1](x, y))
+                if OPERATORS[token][3] == 'b':
+                    self.binary_operator(token)
                 else:
-                    x = self.stack.pop()
-                    self.stack.append(OPERATORS[token][1](x))
+                    self.func_unary_operator(token)
             else:
+                # number
                 self.stack.append(token)
         return self.stack[0]
+
+    def func_unary_operator(self, token):
+        x = self.stack.pop()
+        self.stack.append(OPERATORS[token][1](x))
+
+    def binary_operator(self, token):
+        y, x = self.stack.pop(), self.stack.pop()
+        self.stack.append(OPERATORS[token][1](x, y))
